@@ -1,2 +1,17 @@
+# --- Python ---
+__pycache__/
+
+# --- Poetry ---
+.poetry/
+.poetry-cache/
+
+# --- Environment variables ---
+.env
+.env.*
+
+# --- OS junk ---
 .DS_Store
-**/.DS_Store
+
+# --- Editor / IDE ---
+.vscode/
+
