@@ -1,123 +1,84 @@
-1. Backend Infrastructure & Skeleton
+## 1. Backend Infrastructure & Skeleton
 
-(you are currently here)
+**Focus:**
 
-Focus:
+- Environment
+- Tooling
+- Process
+- “Can this system exist?”
 
-Environment
+**Ends when:**
 
-Tooling
+- Backend runs
+- GraphQL endpoint exists
+- No real domain logic yet
 
-Process
+## 2. Domain & API Shape (Schema-first)
 
-“Can this system exist?”
+**Focus:**
 
-Ends when:
+- What exists in the system
+- How data is structured
+- How frontend will talk to backend
 
-Backend runs
+**Ends when:**
 
-GraphQL endpoint exists
+- GraphQL schema is stable
+- Queries return meaningful domain data
+- Still no UI
 
-No real domain logic yet
+## 3. AI Integration as a System Actor
 
-⬅️ FIRST BIG BREAKING POINT
+**Focus:**
 
-2. Domain & API Shape (Schema-first)
+- Prompt design
+- Constraints
+- Ethics & framing
+- Dynamic vs persistent outputs
 
-Focus:
+**Ends when:**
 
-What exists in the system
+- AI-generated interpretations are available via API
+- No UI polish yet
 
-How data is structured
+## 4. Frontend Foundation (Structure, not beauty)
 
-How frontend will talk to backend
+**Focus:**
 
-Ends when:
+- Data fetching
+- Page skeleton
+- Layout and spacing
+- Single page wired end-to-end
 
-GraphQL schema is stable
+**Ends when:**
 
-Queries return meaningful domain data
+- One page renders real data
+- Looks unfinished but coherent
 
-Still no UI
+## 5. Curtain Mode (Differentiator)
 
-⬅️ SECOND BIG BREAKING POINT
+**Focus:**
 
-3. AI Integration as a System Actor
+- Dual-layer experience
+- Engineering notes surfaced
+- Intentional affordances
 
-Focus:
+**Ends when:**
 
-Prompt design
+- Curtain can be toggled
+- It reveals something meaningful
+- It doesn’t break the art experience
 
-Constraints
+## 6. Visual Refinement & Taste
 
-Ethics & framing
+**Focus:**
 
-Dynamic vs persistent outputs
+- Typography
+- Spacing
+- Motion
+- Mood
 
-Ends when:
+**Ends when:**
 
-AI-generated interpretations are available via API
-
-No UI polish yet
-
-⬅️ THIRD BIG BREAKING POINT
-
-4. Frontend Foundation (Structure, not beauty)
-
-Focus:
-
-Data fetching
-
-Page skeleton
-
-Layout and spacing
-
-Single page wired end-to-end
-
-Ends when:
-
-One page renders real data
-
-Looks unfinished but coherent
-
-⬅️ FOURTH BIG BREAKING POINT
-
-5. Curtain Mode (Differentiator)
-
-Focus:
-
-Dual-layer experience
-
-Engineering notes surfaced
-
-Intentional affordances
-
-Ends when:
-
-Curtain can be toggled
-
-It reveals something meaningful
-
-It doesn’t break the art experience
-
-⬅️ FIFTH BIG BREAKING POINT
-
-6. Visual Refinement & Taste
-
-Focus:
-
-Typography
-
-Spacing
-
-Motion
-
-Mood
-
-Ends when:
-
-Page feels “finished”
-
-No new features added
-
-⬅️ FINAL STOP
+- Page feels “finished”
+- No new features added
