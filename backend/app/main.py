@@ -1,6 +1,9 @@
+from typing import AsyncIterator
+
 from fastapi import FastAPI
 from strawberry.fastapi import GraphQLRouter
 
+from app.ai_service import AIService
 from app.database import SessionLocal
 from app.schema import schema
 
@@ -12,11 +15,12 @@ def health_check():
     return {"status": "ok"}
 
 
-async def get_context() -> dict:
-    """Provide database session in GraphQL context."""
+async def get_context() -> AsyncIterator[dict]:
+    """Provide database session and AI service in GraphQL context."""
     db = SessionLocal()
+    ai_service = AIService()
     try:
-        yield {"db": db}
+        yield {"db": db, "ai_service": ai_service}
     finally:
         db.close()
 

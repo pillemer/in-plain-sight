@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 import strawberry
@@ -99,6 +99,56 @@ class Query:
             return None
         artwork_model = repo.get_by_id(artwork_id)
         return Artwork.from_model(artwork_model) if artwork_model else None
+
+    @strawberry.field
+    async def generate_artwork_interpretation(
+        self, artwork_id: str, info: strawberry.Info
+    ) -> AIInterpretation | None:
+        """Generate a fresh AI interpretation for an artwork.
+
+        This query generates an ephemeral (non-persisted) AI interpretation
+        focusing on colors, composition, mood, and texture. The interpretation
+        is generated fresh on each request.
+
+        Args:
+            artwork_id: The ID of the artwork to interpret
+            info: GraphQL context containing database session and AI service
+
+        Returns:
+            AIInterpretation object with generated content, or None if artwork not found
+        """
+        db = info.context["db"]
+        ai_service = info.context["ai_service"]
+
+        # Fetch artwork from database
+        repo = ArtworkRepository(db)
+        try:
+            artwork_id_int = int(artwork_id)
+        except ValueError:
+            return None
+
+        artwork_model = repo.get_by_id(artwork_id_int)
+        if not artwork_model:
+            return None
+
+        # Generate AI interpretation
+        try:
+            interpretation_text = await ai_service.interpret_artwork(artwork_model)
+
+            # Create ephemeral AIInterpretation object (not persisted to DB)
+            now = datetime.now(timezone.utc)
+            return AIInterpretation(
+                id=f"ephemeral-{artwork_id}-{int(now.timestamp())}",
+                content=interpretation_text,
+                generated_at=now,
+                context=f"artwork:{artwork_id}",
+            )
+        except Exception as e:
+            # Log error with full traceback for debugging
+            import traceback
+            print(f"Error generating AI interpretation for artwork {artwork_id}:")
+            print(traceback.format_exc())
+            return None
 
 
 schema = strawberry.Schema(query=Query)

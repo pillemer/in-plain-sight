@@ -13,6 +13,8 @@ uvicorn = "^0.38.0"
 strawberry-graphql = "^0.287.3"
 sqlalchemy = "^2.0.45"
 alembic = "^1.17.2"
+google-genai = "^0.4.0"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.0"

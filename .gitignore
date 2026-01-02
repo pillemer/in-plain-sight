@@ -7,7 +7,12 @@ __pycache__/
 
 # --- Environment variables ---
 .env
-.env.*
+
+# --- Database files ---
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
 
 # --- OS junk ---
 .DS_Store
@@ -15,4 +20,5 @@ __pycache__/
 # --- Editor / IDE ---
 .vscode/
 .claude
-
+.pytest_cache/
+.ruff_cache/
