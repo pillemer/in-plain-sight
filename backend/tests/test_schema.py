@@ -1,8 +1,73 @@
+import os
+
+import pytest
 from fastapi.testclient import TestClient
 
+# Set test database URL before importing app modules
+os.environ["DATABASE_URL"] = "sqlite:///./test_gallery.db"
+
+from app.database import SessionLocal, init_db
 from app.main import app
+from app.models import Artist, Artwork, Collection
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def setup_database():
+    """Setup test database before each test."""
+    # Initialize tables
+    init_db()
+
+    db = SessionLocal()
+    try:
+        # Clear existing data
+        db.query(Artwork).delete()
+        db.query(Collection).delete()
+        db.query(Artist).delete()
+
+        # Create test artist
+        artist = Artist(name="Jack Pillemer")
+        db.add(artist)
+        db.flush()
+
+        # Create test collection
+        collection = Collection(title="Selected Works", description=None)
+        db.add(collection)
+        db.flush()
+
+        # Create test artworks
+        artwork1 = Artwork(
+            title="Untitled Study I",
+            image_url="https://example.com/image-1.jpg",
+            artist_id=artist.id,
+            collection_id=collection.id,
+        )
+        artwork2 = Artwork(
+            title="Untitled Study II",
+            image_url="https://example.com/image-2.jpg",
+            artist_id=artist.id,
+            collection_id=collection.id,
+        )
+
+        db.add(artwork1)
+        db.add(artwork2)
+
+        db.commit()
+    finally:
+        db.close()
+
+    yield
+
+    # Cleanup after test
+    db = SessionLocal()
+    try:
+        db.query(Artwork).delete()
+        db.query(Collection).delete()
+        db.query(Artist).delete()
+        db.commit()
+    finally:
+        db.close()
 
 
 def test_collections_query_structure():
