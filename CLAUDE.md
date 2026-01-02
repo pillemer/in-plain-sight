@@ -222,7 +222,10 @@ AI is a guest voice, not a curator.
 
 ## Current Status
 
-- Backend skeleton implemented (FastAPI + Strawberry)
-- Basic GraphQL schema with hardcoded data
-- No persistence, tests, or frontend yet
-- On Phase 1 of [docs/project_process.md](docs/project_process.md): "Backend Infrastructure & Skeleton"
+- Backend running with FastAPI + Strawberry GraphQL
+- Complete GraphQL schema with Artist, Artwork, Collection, AIInterpretation types
+- All queries functional: `artist()`, `collections()`, `collection(id)`, `artwork(id)`
+- Comprehensive test suite (8 tests passing)
+- Code linted and formatted with Ruff
+- Data still hardcoded (persistence in next step)
+- On Phase 2 of [docs/project_process.md](docs/project_process.md): "Domain & API Shape"
