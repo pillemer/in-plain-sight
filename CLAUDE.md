@@ -127,43 +127,65 @@ You are a **junior engineer**, not an architect:
 
 ## Backend Commands
 
-All backend commands run from the `backend/` directory using Poetry.
+All backend commands run from the `backend/` directory. Use Makefile targets for common tasks.
 
 ### Setup
 ```bash
 cd backend
-poetry install
+make install                                   # Install all dependencies via Poetry
 ```
 
 ### Development server
 ```bash
 cd backend
-poetry run uvicorn app.main:app --reload
+make dev                                       # Start dev server with hot reload
 ```
 
 The GraphQL endpoint is available at `/graphql` with an interactive playground.
 
+### Database seeding
+```bash
+cd backend
+make seed                                      # Seed database with sample data
+```
+
 ### Testing
 ```bash
 cd backend
-poetry install                                 # Install all dependencies (including dev)
-poetry run pytest                              # Run all tests
+make test                                      # Run all tests (verbose)
 poetry run pytest path/to/test_file.py         # Run single file
 poetry run pytest path/to/test_file.py -k name # Run specific test
-poetry run pytest -v                           # Verbose output
 ```
 
 ### Linting and formatting
 ```bash
 cd backend
-# Linting (find errors, bugs, code quality issues)
-poetry run ruff check .                        # Report lint issues
+make lint                                      # Check code with ruff
 poetry run ruff check --fix .                  # Auto-fix lint issues
-
-# Formatting (code style consistency)
-poetry run ruff format .                       # Format code
+make format                                    # Format code with ruff
 poetry run ruff format --check .               # Check if formatting needed (dry-run)
 ```
+
+### AI Integration Setup
+AI-generated artwork interpretations require a Google Gemini API key:
+
+1. Get API key from [Google AI Studio](https://aistudio.google.com/apikey)
+2. Create `backend/.env` file:
+   ```bash
+   GEMINI_API_KEY=your_api_key_here
+   ```
+3. Free tier provides 1000 requests/day (sufficient for development)
+4. Query via GraphQL playground:
+   ```graphql
+   query {
+     generateArtworkInterpretation(artworkId: "1") {
+       content
+       generated_at
+     }
+   }
+   ```
+
+**Note**: `.env` file is gitignored - never commit API keys
 
 ## Architecture Principles
 
@@ -225,8 +247,9 @@ AI is a guest voice, not a curator.
 
 - Backend running with FastAPI + Strawberry GraphQL
 - Complete GraphQL schema with Artist, Artwork, Collection, AIInterpretation types
-- All queries functional: `artist()`, `collections()`, `collection(id)`, `artwork(id)`
-- Comprehensive test suite (8 tests passing)
+- Database persistence with SQLAlchemy (SQLite)
+- AI integration with Google Gemini API (multimodal vision)
+- All queries functional: `artist()`, `collections()`, `collection(id)`, `artwork(id)`, `generateArtworkInterpretation(artworkId)`
+- Comprehensive test suite
 - Code linted and formatted with Ruff
-- Data still hardcoded (persistence in next step)
-- On Phase 2 of [docs/project_process.md](docs/project_process.md): "Domain & API Shape"
+- Phase 3 (AI Integration) complete - MVP functional

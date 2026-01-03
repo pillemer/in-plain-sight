@@ -143,9 +143,10 @@ class Query:
                 generated_at=now,
                 context=f"artwork:{artwork_id}",
             )
-        except Exception as e:
+        except Exception:
             # Log error with full traceback for debugging
             import traceback
+
             print(f"Error generating AI interpretation for artwork {artwork_id}:")
             print(traceback.format_exc())
             return None
