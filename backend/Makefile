@@ -14,3 +14,6 @@ format:
 
 install:
 	poetry install
+
+seed:
+	poetry run python -m app.seed

@@ -6,6 +6,7 @@ interpretations of artworks with strict boundaries on what the AI can say.
 
 import os
 
+import httpx
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -49,6 +50,9 @@ class AIService:
         third-person, poetic but not overwrought, and strictly avoids
         inventing facts about the artwork.
 
+        The AI receives both the artwork image (fetched from image_url) and
+        textual metadata to provide visually-grounded interpretations.
+
         Args:
             artwork: The Artwork model instance to interpret
 
@@ -57,13 +61,35 @@ class AIService:
 
         Raises:
             Exception: If the API call fails (network error, rate limit, etc.)
+            httpx.HTTPError: If image fetching fails
         """
-        prompt = self._build_prompt(artwork)
+        prompt_text = self._build_prompt(artwork)
+
+        # Fetch the artwork image from URL
+        async with httpx.AsyncClient() as http_client:
+            try:
+                image_response = await http_client.get(artwork.image_url, timeout=10.0)
+                image_response.raise_for_status()
+                image_bytes = image_response.content
+
+                # Detect MIME type from Content-Type header, fallback to jpeg
+                mime_type = image_response.headers.get("content-type", "image/jpeg")
+
+            except httpx.HTTPError as e:
+                raise Exception(
+                    f"Failed to fetch artwork image from {artwork.image_url}: {str(e)}"
+                ) from e
+
+        # Build multimodal content: image + text prompt
+        contents = [
+            types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+            prompt_text,
+        ]
 
         try:
             response = await self.client.aio.models.generate_content(
                 model="gemini-2.0-flash-lite",
-                contents=prompt,
+                contents=contents,
                 config=types.GenerateContentConfig(
                     temperature=0.7,  # Creative but not random
                     max_output_tokens=200,  # Keep responses concise (1-2 paragraphs)
@@ -90,6 +116,9 @@ class AIService:
         - Hard boundaries (no invented facts, interpretation only)
         - Tone guidance (third person, poetic but restrained)
 
+        Note: The artwork image is provided separately via multimodal input,
+        so the AI can base its interpretation on what it actually sees.
+
         Args:
             artwork: The Artwork model instance with metadata
 
@@ -101,24 +130,26 @@ class AIService:
         #
         # Prompt engineering considerations:
         # - Third person is enforced to avoid conversational tone
+        # - "Based on what you see" emphasizes visual grounding
         # - "Observed, not factual" guides AI away from claiming material knowledge
         # - "Poetic language sparingly" prevents overwrought prose
         # - Explicit length constraint (1-2 paragraphs)
 
         return f"""You are writing a curator's note for an art gallery visitor.
-Write a brief, observational interpretation of this artwork.
+Write a brief, observational interpretation of this artwork based on what you see in the image.
 
 Artwork: "{artwork.title}" by {artwork.artist.name}
 
-Focus on:
+Focus on what you observe in the image:
 - Colors and palette
 - Composition and structure
 - Mood and emotional tone
-- Texture and technique (observed, not factual)
+- Texture and technique (visual observation only)
 
 Constraints:
 - Write in third person
 - 1-2 paragraphs maximum
+- Base your interpretation only on what you can see in the image
 - Do not invent facts (dates, materials, provenance, artist intent)
 - Offer interpretation only, not assertions
 - Use poetic language sparingly - avoid overwrought or gushy prose

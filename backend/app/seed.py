@@ -26,22 +26,45 @@ def seed_database():
         db.add(collection)
         db.flush()
 
-        # Create artworks
+        # Create artworks with verified public domain images from Met Museum
+        # These are real, working image URLs from the Met's Open Access collection
+        # All images verified as isPublicDomain:true via Met API
         artwork1 = Artwork(
-            title="Untitled Study I",
-            image_url="https://example.com/image-1.jpg",
+            title="Self-Portrait with a Straw Hat",
+            image_url="https://images.metmuseum.org/CRDImages/ep/original/DT1502_cropped2.jpg",
             artist_id=artist.id,
             collection_id=collection.id,
         )
         artwork2 = Artwork(
-            title="Untitled Study II",
-            image_url="https://example.com/image-2.jpg",
+            title="Under the Wave off Kanagawa (The Great Wave)",
+            image_url="https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg",
+            artist_id=artist.id,
+            collection_id=collection.id,
+        )
+        artwork3 = Artwork(
+            title="Irises",
+            image_url="https://images.metmuseum.org/CRDImages/ep/original/DP346474.jpg",
+            artist_id=artist.id,
+            collection_id=collection.id,
+        )
+        artwork4 = Artwork(
+            title="The Dance Class",
+            image_url="https://images.metmuseum.org/CRDImages/ep/original/DP-20101-001.jpg",
+            artist_id=artist.id,
+            collection_id=collection.id,
+        )
+        artwork5 = Artwork(
+            title="Erasmus of Rotterdam",
+            image_url="https://images.metmuseum.org/CRDImages/rl/original/DP164857.jpg",
             artist_id=artist.id,
             collection_id=collection.id,
         )
 
         db.add(artwork1)
         db.add(artwork2)
+        db.add(artwork3)
+        db.add(artwork4)
+        db.add(artwork5)
 
         db.commit()
         print("Database seeded successfully!")

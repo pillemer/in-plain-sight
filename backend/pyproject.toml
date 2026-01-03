@@ -15,11 +15,11 @@ sqlalchemy = "^2.0.45"
 alembic = "^1.17.2"
 google-genai = "^0.4.0"
 python-dotenv = "^1.0.0"
+httpx = "^0.28.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.0"
 pytest-asyncio = "^1.0.0"
-httpx = "^0.28.1"
 ruff = "^0.14.0"
 
 [tool.ruff]
