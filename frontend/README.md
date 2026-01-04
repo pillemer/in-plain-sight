@@ -1,73 +1,165 @@
-# React + TypeScript + Vite
+# In Plain Sight - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React frontend for the In Plain Sight art gallery application.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Build Tool**: Vite
+- **Framework**: React 18 + TypeScript
+- **Data Fetching**: TanStack Query + graphql-request
+- **Routing**: React Router
+- **Styling**: SCSS Modules
+- **Type Generation**: GraphQL Code Generator
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+ (or compatible version)
+- Backend server running at `http://localhost:8000/graphql`
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env.local` file (see `.env.example` for template):
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+VITE_API_URL=http://localhost:8000/graphql
 ```
+
+## Development Commands
+
+### Start dev server
+```bash
+npm run dev
+```
+
+Server runs at `http://localhost:5173` with hot module replacement.
+
+### Type checking
+```bash
+npm run build      # Build for production (includes type checking)
+npx tsc --noEmit   # Type check without building
+```
+
+### Preview production build
+```bash
+npm run preview
+```
+
+## GraphQL Code Generator Workflow
+
+The project uses GraphQL Code Generator to create TypeScript types from the backend schema.
+
+### Generate types
+```bash
+npm run codegen
+```
+
+**Requirements:**
+- Backend must be running at `http://localhost:8000/graphql`
+- Run this command whenever you:
+  - Add or modify `.graphql` query files in `src/queries/`
+  - Backend GraphQL schema changes
+
+### Watch mode (auto-regenerate on changes)
+```bash
+npm run codegen:watch
+```
+
+### Generated files
+- `src/generated/graphql.ts` - Auto-generated TypeScript types and documents
+- **Do not edit manually** - this file is regenerated from schema
+
+## Project Structure
+
+```
+src/
+├── components/         # React components (with .module.scss)
+├── pages/              # Page-level components
+│   └── Gallery.tsx
+├── styles/
+│   ├── abstracts/      # Variables, mixins
+│   ├── base/           # Reset, typography
+│   └── global.scss     # Global styles entry point
+├── queries/            # GraphQL query definitions (.graphql files)
+│   └── artist.graphql
+├── lib/                # Client setup
+│   ├── graphqlClient.ts
+│   └── queryClient.ts
+├── hooks/              # Custom React hooks
+├── generated/          # Auto-generated (gitignored)
+│   └── graphql.ts
+└── types/              # Manual TypeScript types
+
+```
+
+## Adding New GraphQL Queries
+
+1. Create a `.graphql` file in `src/queries/`:
+   ```graphql
+   # src/queries/myQuery.graphql
+   query GetCollections {
+     collections {
+       id
+       title
+     }
+   }
+   ```
+
+2. Run codegen to generate TypeScript types:
+   ```bash
+   npm run codegen
+   ```
+
+3. Import and use the generated document in your component:
+   ```typescript
+   import { useQuery } from '@tanstack/react-query'
+   import { graphqlClient } from '../lib/graphqlClient'
+   import { GetCollectionsDocument } from '../generated/graphql'
+
+   const { data } = useQuery({
+     queryKey: ['collections'],
+     queryFn: async () => graphqlClient.request(GetCollectionsDocument)
+   })
+   ```
+
+## SCSS Architecture
+
+- **CSS Modules** for component styles (`.module.scss`)
+- **Global SCSS** for base styles, variables, and mixins
+- **Modern `@use`/`@forward`** syntax (no deprecated `@import`)
+
+### Using SCSS in components
+
+```tsx
+// Component file
+import styles from './MyComponent.module.scss'
+
+export function MyComponent() {
+  return <div className={styles.container}>...</div>
+}
+```
+
+```scss
+// MyComponent.module.scss
+@use '../styles/abstracts' as *;
+
+.container {
+  padding: $spacing-lg;
+  color: var(--color-text);
+
+  @include respond-to(tablet) {
+    padding: $spacing-xl;
+  }
+}
+```
+
+## Notes
+
+- Backend server must be running for GraphQL queries to work
+- CORS is configured in the backend for `http://localhost:5173`
+- CSS custom properties in `:root` support runtime changes (for Curtain mode)

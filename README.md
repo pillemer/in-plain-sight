@@ -8,24 +8,31 @@ For full project intent and constraints, see [docs/project_context.md](docs/proj
 
 ## Current Status
 
-**Backend (Complete):**
+**Backend:**
 - FastAPI + Strawberry GraphQL server
 - SQLite database with SQLAlchemy ORM
 - Domain model: Artist, Artwork, Collection, AI Interpretation
 - AI-powered artwork interpretation via Google Gemini (multimodal vision)
 - Comprehensive test suite
 - Seeded sample data
+- CORS configured for frontend
 
-**Frontend:** Planned (React + SCSS/SASS)
+**Frontend:**
+- Vite + React 18 + TypeScript
+- TanStack Query + GraphQL Code Generator
+- SCSS Modules with modern architecture
+- Full end-to-end integration with backend
+- Gallery page with artist data fetching
 
 ## Quick Start
 
 ### Prerequisites
 - Python 3.13+
+- Node.js 18+
 - [Poetry](https://python-poetry.org/) installed
 - Google Gemini API key (for AI features)
 
-### Installation
+### Backend Setup
 
 ```bash
 # Install dependencies
@@ -45,6 +52,25 @@ make dev
 The GraphQL playground will be available at `http://localhost:8000/graphql`
 
 Get your free Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey) (1000 requests/day on free tier).
+
+### Frontend Setup
+
+```bash
+# Install dependencies
+cd frontend
+npm install
+
+# Set up environment (create frontend/.env.local file)
+echo "VITE_API_URL=http://localhost:8000/graphql" > .env.local
+
+# Generate TypeScript types from GraphQL schema (backend must be running)
+npm run codegen
+
+# Start the development server
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173`
 
 ## Features
 
@@ -100,15 +126,24 @@ AI interpretations are ephemeral, stylistically constrained, and never invent fa
 │   │   ├── main.py    # FastAPI entrypoint
 │   │   ├── schema.py  # GraphQL schema
 │   │   ├── models.py  # SQLAlchemy models
-│   │   └── ai/        # AI service integration
+│   │   └── ai_service.py  # AI service integration
 │   ├── tests/         # Test suite
 │   └── Makefile       # Development commands
-└── frontend/          # (Planned) React application
+└── frontend/          # React + TypeScript application
+    ├── src/
+    │   ├── pages/     # Page components
+    │   ├── components/# React components
+    │   ├── styles/    # SCSS modules
+    │   ├── queries/   # GraphQL query definitions
+    │   └── lib/       # Client setup
+    └── README.md      # Frontend documentation
 ```
 
 ## Development
 
-All commands run from the `backend/` directory:
+### Backend Commands
+
+From the `backend/` directory:
 
 ```bash
 make dev      # Start dev server with hot reload
@@ -118,12 +153,18 @@ make format   # Format code with ruff
 make seed     # Seed database with sample data
 ```
 
-### Running Specific Tests
+### Frontend Commands
+
+From the `frontend/` directory:
 
 ```bash
-poetry run pytest path/to/test_file.py           # Single file
-poetry run pytest path/to/test_file.py -k name   # Specific test
+npm run dev           # Start dev server with HMR
+npm run build         # Build for production
+npm run codegen       # Generate TypeScript types from GraphQL schema
+npm run codegen:watch # Watch mode for codegen
 ```
+
+See [frontend/README.md](frontend/README.md) for detailed frontend documentation.
 
 ## Technology Stack
 
@@ -136,10 +177,13 @@ poetry run pytest path/to/test_file.py -k name   # Specific test
 - Google Gemini API (AI interpretation)
 - Poetry (dependency management)
 
-**Frontend (Planned):**
-- React
-- SCSS/SASS styling
-- Framework choice intentionally deferred
+**Frontend:**
+- Vite (build tool)
+- React 18 + TypeScript
+- TanStack Query (data fetching)
+- graphql-request + GraphQL Code Generator (type-safe GraphQL)
+- React Router (routing)
+- SCSS Modules (styling)
 
 ## Documentation
 

@@ -123,7 +123,14 @@ You are a **junior engineer**, not an architect:
 - `backend/` — Python backend (FastAPI + Strawberry GraphQL)
   - `backend/app/main.py` — FastAPI application entrypoint
   - `backend/app/schema.py` — Strawberry GraphQL schema
-- Frontend planned (React + SASS, framework choice deferred)
+  - `backend/app/ai_service.py` — AI integration (Google Gemini)
+- `frontend/` — React + TypeScript frontend (Vite)
+  - `frontend/src/pages/` — Page components
+  - `frontend/src/components/` — React components
+  - `frontend/src/styles/` — SCSS modules (abstracts, base, global)
+  - `frontend/src/queries/` — GraphQL query definitions (.graphql files)
+  - `frontend/src/lib/` — GraphQL and TanStack Query client setup
+  - `frontend/src/generated/` — Auto-generated TypeScript types (gitignored)
 
 ## Backend Commands
 
@@ -187,6 +194,52 @@ AI-generated artwork interpretations require a Google Gemini API key:
 
 **Note**: `.env` file is gitignored - never commit API keys
 
+## Frontend Commands
+
+All frontend commands run from the `frontend/` directory.
+
+### Setup
+```bash
+cd frontend
+npm install                                    # Install all dependencies
+```
+
+### Environment variables
+Create `frontend/.env.local` file:
+```bash
+VITE_API_URL=http://localhost:8000/graphql
+```
+
+**Note**: `.env.local` is gitignored - never commit environment files
+
+### Development server
+```bash
+cd frontend
+npm run dev                                    # Start dev server with HMR
+```
+
+Frontend runs at `http://localhost:5173`
+
+### GraphQL Code Generator
+```bash
+cd frontend
+npm run codegen                                # Generate TypeScript types from schema
+npm run codegen:watch                          # Watch mode (auto-regenerate)
+```
+
+**Important**: Backend must be running at `http://localhost:8000/graphql` for codegen to work.
+
+Generated types are written to `src/generated/graphql.ts` (gitignored). Run codegen whenever:
+- You add/modify `.graphql` files in `src/queries/`
+- Backend GraphQL schema changes
+
+### Build and type checking
+```bash
+cd frontend
+npm run build                                  # Build for production
+npx tsc --noEmit                               # Type check without building
+```
+
 ## Architecture Principles
 
 ### Backend
@@ -195,11 +248,14 @@ AI-generated artwork interpretations require a Google Gemini API key:
 - SQLite initially (Postgres later)
 - Simple, explainable data access — no premature abstraction
 
-### Frontend (planned)
-- React single-page app
-- SCSS/SASS styling (no Tailwind)
+### Frontend
+- Vite + React 18 + TypeScript
+- TanStack Query for data fetching
+- graphql-request + GraphQL Code Generator for type-safe GraphQL
+- React Router for routing
+- SCSS Modules (component-scoped styling)
+- SCSS variables → CSS custom properties for runtime changes
 - Visual tone: quiet, spacious, gallery-like
-- Must feel like a "finished room"
 
 ### Curtain Mode
 - Activated by deliberate but subtle interaction
@@ -245,11 +301,23 @@ AI is a guest voice, not a curator.
 
 ## Current Status
 
-- Backend running with FastAPI + Strawberry GraphQL
+**Backend (Complete):**
+- FastAPI + Strawberry GraphQL server running
 - Complete GraphQL schema with Artist, Artwork, Collection, AIInterpretation types
 - Database persistence with SQLAlchemy (SQLite)
 - AI integration with Google Gemini API (multimodal vision)
 - All queries functional: `artist()`, `collections()`, `collection(id)`, `artwork(id)`, `generateArtworkInterpretation(artworkId)`
-- Comprehensive test suite
+- Comprehensive test suite (9 unit + 6 integration tests)
 - Code linted and formatted with Ruff
-- Phase 3 (AI Integration) complete - MVP functional
+- CORS configured for frontend origin
+
+**Frontend (Complete):**
+- Vite + React 18 + TypeScript setup
+- TanStack Query + graphql-request configured
+- GraphQL Code Generator working (generates types from backend schema)
+- SCSS Modules with modern architecture (abstracts, base, global)
+- Full end-to-end integration with backend
+- Gallery page fetching and displaying artist data
+- All TypeScript compilation passing
+
+**Full-stack MVP functional** - backend and frontend communicating successfully.
