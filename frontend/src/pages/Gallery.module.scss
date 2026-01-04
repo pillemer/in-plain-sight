@@ -1,0 +1,42 @@
+@use '../styles/abstracts' as *;
+
+.container {
+  max-width: $max-width-content;
+  margin: 0 auto;
+  padding: $spacing-xl $spacing-md;
+
+  @include respond-to(desktop) {
+    padding: $spacing-2xl $spacing-lg;
+  }
+}
+
+.header {
+  margin-bottom: $spacing-xl;
+}
+
+.title {
+  font-family: $font-family-serif;
+  font-size: $font-size-display;
+  line-height: $line-height-tight;
+  color: var(--color-text);
+}
+
+.content {
+  margin-top: $spacing-lg;
+}
+
+.debug {
+  font-size: $font-size-small;
+  color: var(--color-text-secondary);
+  margin-bottom: $spacing-sm;
+}
+
+.status {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.error {
+  color: #c41e3a;
+  font-weight: 500;
+}

@@ -1,6 +1,7 @@
 from typing import AsyncIterator
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from strawberry.fastapi import GraphQLRouter
 
 from app.ai_service import AIService
@@ -8,6 +9,15 @@ from app.database import SessionLocal
 from app.schema import schema
 
 app = FastAPI()
+
+# Configure CORS for frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vite dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")
