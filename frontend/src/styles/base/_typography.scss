@@ -1,0 +1,44 @@
+// Base typography for In Plain Sight gallery
+
+@use '../abstracts' as *;
+
+body {
+  font-family: $font-family-sans;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+h1,
+h2,
+h3 {
+  font-family: $font-family-serif;
+  line-height: $line-height-tight;
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: $font-size-display;
+}
+
+h2 {
+  font-size: $font-size-title;
+}
+
+h3 {
+  font-size: $font-size-large;
+}
+
+p {
+  margin-bottom: $spacing-md;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

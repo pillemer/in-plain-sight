@@ -1,0 +1,16 @@
+// Global styles entry point for In Plain Sight gallery
+
+@use 'abstracts' as *;
+@use 'base/reset';
+@use 'base/typography';
+
+// Expose CSS custom properties for runtime changes (Curtain mode)
+:root {
+  --color-bg: #{$color-background};
+  --color-surface: #{$color-surface};
+  --color-text: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-accent: #{$color-accent};
+  --color-border: #{$color-border};
+  --gallery-gap: #{$gallery-gap};
+}
