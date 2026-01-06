@@ -1,0 +1,114 @@
+@use '../../styles/abstracts' as *;
+
+.wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+
+  // GPU acceleration without will-change (which can cause memory issues)
+  backface-visibility: hidden;
+
+  // Smooth transitions for transform and opacity changes
+  transition:
+    transform 0.05s linear,
+    opacity 0.1s ease-out;
+}
+
+// Horizontal offset patterns for visual interest
+.offsetCenter {
+  // Default centered position
+}
+
+.offsetLeft {
+  left: 35%;
+
+  @include respond-to(tablet) {
+    left: 30%;
+  }
+
+  @include respond-to(desktop) {
+    left: 35%;
+  }
+}
+
+.offsetRight {
+  left: 65%;
+
+  @include respond-to(tablet) {
+    left: 70%;
+  }
+
+  @include respond-to(desktop) {
+    left: 65%;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  // Center the card on its position point
+  transform: translate(-50%, -50%);
+
+  // Constrain size to viewport
+  max-width: 85vw;
+  max-height: 80vh;
+
+  @include respond-to(tablet) {
+    max-width: 70vw;
+    max-height: 75vh;
+  }
+
+  @include respond-to(desktop) {
+    max-width: 55vw;
+    max-height: 70vh;
+  }
+}
+
+.image {
+  // Fixed dimensions for better performance - browser can allocate space early
+  width: auto;
+  height: auto;
+  max-width: 80vw;
+  max-height: 60vh;
+  display: block;
+  background-color: $color-border;
+  object-fit: contain;
+
+  // Optimize image rendering
+  image-rendering: auto;
+
+  @include respond-to(tablet) {
+    max-width: 70vw;
+    max-height: 55vh;
+  }
+
+  @include respond-to(desktop) {
+    max-width: 60vw;
+    max-height: 50vh;
+  }
+}
+
+.title {
+  font-family: $font-family-serif;
+  font-size: $font-size-large;
+  color: $color-text-primary;
+  margin-top: $spacing-md;
+  text-align: center;
+  line-height: $line-height-tight;
+
+  // Hidden by default, shown when focused
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+
+  @include respond-to(desktop) {
+    font-size: $font-size-title;
+    margin-top: $spacing-lg;
+  }
+}
+
+.titleVisible {
+  opacity: 1;
+}

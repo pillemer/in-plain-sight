@@ -1,24 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
 import { graphqlClient } from '../lib/graphqlClient'
-import { GetArtistDocument } from '../generated/graphql'
+import { GetCollectionsDocument } from '../generated/graphql'
+import { GalleryView } from '../components/Gallery'
 import styles from './Gallery.module.scss'
 
 export function Gallery() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['artist'],
+    queryKey: ['collections'],
     queryFn: async () => {
-      return graphqlClient.request(GetArtistDocument)
+      return graphqlClient.request(GetCollectionsDocument)
     },
   })
 
   if (isLoading) {
-    return <div className={styles.container}>Loading...</div>
+    return <div className={styles.loading}>Loading...</div>
   }
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <p className={styles.error}>Error loading artist data</p>
+      <div className={styles.errorContainer}>
+        <p className={styles.error}>Error loading gallery</p>
         <pre className={styles.debug}>
           {error instanceof Error ? error.message : JSON.stringify(error, null, 2)}
         </pre>
@@ -26,24 +27,23 @@ export function Gallery() {
     )
   }
 
-  if (!data?.artist) {
-    return <div className={styles.container}>No artist found</div>
+  if (!data?.collections || data.collections.length === 0) {
+    return <div className={styles.loading}>No collections found</div>
   }
 
-  return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>{data.artist.name}</h1>
-      </header>
-
-      <div className={styles.content}>
-        <p className={styles.debug}>
-          Artist ID: {data.artist.id}
-        </p>
-        <p className={styles.status}>
-          Backend connected successfully. GraphQL query working.
-        </p>
-      </div>
-    </div>
+  // For MVP, flatten all artworks from all collections into a single depth sequence
+  // Future: could have collection navigation or separate galleries
+  const allArtworks = data.collections.flatMap((collection) =>
+    collection.artworks.map((artwork) => ({
+      id: artwork.id,
+      title: artwork.title,
+      imageUrl: artwork.imageUrl,
+    }))
   )
+
+  if (allArtworks.length === 0) {
+    return <div className={styles.loading}>No artworks found</div>
+  }
+
+  return <GalleryView artworks={allArtworks} />
 }

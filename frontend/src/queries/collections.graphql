@@ -1,0 +1,12 @@
+query GetCollections {
+  collections {
+    id
+    title
+    description
+    artworks {
+      id
+      title
+      imageUrl
+    }
+  }
+}
