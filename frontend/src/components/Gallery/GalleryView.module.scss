@@ -5,7 +5,12 @@
   inset: 0;
   overflow-y: scroll;
   overflow-x: hidden;
-  background-color: $color-background;
+
+  // Forest background
+  background-image: url('/backgroundForest.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 
   // Hide scrollbar but keep functionality
   scrollbar-width: none;

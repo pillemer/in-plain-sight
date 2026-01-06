@@ -1,13 +1,57 @@
-"""Seed the database with initial data."""
+"""Seed the database with artwork from Cloudinary."""
+
+import os
+
+import cloudinary
+import cloudinary.api
+from dotenv import load_dotenv
 
 from app.database import SessionLocal, init_db
 from app.models import Artist, Artwork, Collection
 
+# Load environment variables
+load_dotenv()
 
-def seed_database():
-    """Populate database with initial gallery data."""
+# Configure Cloudinary
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
+
+# Cloudinary base URL for constructing image URLs
+CLOUDINARY_BASE_URL = f"https://res.cloudinary.com/{os.getenv('CLOUDINARY_CLOUD_NAME')}/image/upload"
+
+
+def fetch_cloudinary_images(max_results: int = 20) -> list[dict]:
+    """Fetch image public_ids from Cloudinary."""
+    try:
+        # Fetch resources from Cloudinary
+        result = cloudinary.api.resources(
+            type="upload",
+            resource_type="image",
+            max_results=max_results,
+        )
+        return result.get("resources", [])
+    except Exception as e:
+        print(f"Error fetching from Cloudinary: {e}")
+        return []
+
+
+def seed_database(max_artworks: int = 20):
+    """Populate database with artwork from Cloudinary."""
     # Initialize database tables
     init_db()
+
+    # Fetch images from Cloudinary
+    print("Fetching images from Cloudinary...")
+    images = fetch_cloudinary_images(max_results=max_artworks)
+
+    if not images:
+        print("No images found in Cloudinary. Please upload some images first.")
+        return
+
+    print(f"Found {len(images)} images in Cloudinary")
 
     db = SessionLocal()
     try:
@@ -22,52 +66,26 @@ def seed_database():
         db.flush()
 
         # Create collection
-        collection = Collection(title="Selected Works", description=None)
+        collection = Collection(title="Watercolours", description=None)
         db.add(collection)
         db.flush()
 
-        # Create artworks with verified public domain images from Met Museum
-        # These are real, working image URLs from the Met's Open Access collection
-        # All images verified as isPublicDomain:true via Met API
-        artwork1 = Artwork(
-            title="Self-Portrait with a Straw Hat",
-            image_url="https://images.metmuseum.org/CRDImages/ep/original/DT1502_cropped2.jpg",
-            artist_id=artist.id,
-            collection_id=collection.id,
-        )
-        artwork2 = Artwork(
-            title="Under the Wave off Kanagawa (The Great Wave)",
-            image_url="https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg",
-            artist_id=artist.id,
-            collection_id=collection.id,
-        )
-        artwork3 = Artwork(
-            title="Irises",
-            image_url="https://images.metmuseum.org/CRDImages/ep/original/DP346474.jpg",
-            artist_id=artist.id,
-            collection_id=collection.id,
-        )
-        artwork4 = Artwork(
-            title="The Dance Class",
-            image_url="https://images.metmuseum.org/CRDImages/ep/original/DP-20101-001.jpg",
-            artist_id=artist.id,
-            collection_id=collection.id,
-        )
-        artwork5 = Artwork(
-            title="Erasmus of Rotterdam",
-            image_url="https://images.metmuseum.org/CRDImages/rl/original/DP164857.jpg",
-            artist_id=artist.id,
-            collection_id=collection.id,
-        )
+        # Create artworks from Cloudinary images
+        for image in images:
+            public_id = image["public_id"]
+            # Construct the URL (format is automatically detected)
+            image_url = f"{CLOUDINARY_BASE_URL}/{public_id}"
 
-        db.add(artwork1)
-        db.add(artwork2)
-        db.add(artwork3)
-        db.add(artwork4)
-        db.add(artwork5)
+            artwork = Artwork(
+                title="",  # No metadata yet
+                image_url=image_url,
+                artist_id=artist.id,
+                collection_id=collection.id,
+            )
+            db.add(artwork)
 
         db.commit()
-        print("Database seeded successfully!")
+        print(f"Database seeded successfully with {len(images)} artworks!")
 
     except Exception as e:
         db.rollback()

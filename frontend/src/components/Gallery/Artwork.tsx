@@ -55,11 +55,11 @@ export const Artwork = memo(function Artwork({
       <div className={styles.card}>
         <img
           src={imageUrl}
-          alt={title}
+          alt={title || 'Artwork'}
           className={styles.image}
           loading="eager"
         />
-        <h3 className={titleClass}>{title}</h3>
+        {title && <h3 className={titleClass}>{title}</h3>}
       </div>
     </article>
   );
