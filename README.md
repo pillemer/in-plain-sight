@@ -13,16 +13,16 @@ For full project intent and constraints, see [docs/project_context.md](docs/proj
 - SQLite database with SQLAlchemy ORM
 - Domain model: Artist, Artwork, Collection, AI Interpretation
 - AI-powered artwork interpretation via Google Gemini (multimodal vision)
+- Cloudinary integration for artwork asset management
 - Comprehensive test suite
-- Seeded sample data
 - CORS configured for frontend
 
 **Frontend:**
 - Vite + React 18 + TypeScript
 - TanStack Query + GraphQL Code Generator
 - SCSS Modules with modern architecture
+- Immersive depth-camera gallery navigation (CSS 3D transforms)
 - Full end-to-end integration with backend
-- Gallery page with artist data fetching
 
 ## Quick Start
 
@@ -31,6 +31,7 @@ For full project intent and constraints, see [docs/project_context.md](docs/proj
 - Node.js 18+
 - [Poetry](https://python-poetry.org/) installed
 - Google Gemini API key (for AI features)
+- Cloudinary account (for artwork assets)
 
 ### Backend Setup
 
@@ -40,18 +41,21 @@ cd backend
 make install
 
 # Set up environment (create backend/.env file)
-echo "GEMINI_API_KEY=your_api_key_here" > .env
+# Copy from .env.example and fill in your keys
+cp .env.example .env
 
-# Seed the database with sample data
+# Seed the database with artwork from Cloudinary
 make seed
 
 # Start the development server
 make dev
 ```
 
-The GraphQL playground will be available at `http://localhost:8000/graphql`
+Required environment variables (see `.env.example`):
+- `GEMINI_API_KEY` - [Google AI Studio](https://aistudio.google.com/apikey)
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` - [Cloudinary Console](https://console.cloudinary.com/settings/api-keys)
 
-Get your free Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey) (1000 requests/day on free tier).
+The GraphQL playground will be available at `http://localhost:8000/graphql`
 
 ### Frontend Setup
 
@@ -126,6 +130,7 @@ AI interpretations are ephemeral, stylistically constrained, and never invent fa
 │   │   ├── main.py    # FastAPI entrypoint
 │   │   ├── schema.py  # GraphQL schema
 │   │   ├── models.py  # SQLAlchemy models
+│   │   ├── seed.py    # Database seeding from Cloudinary
 │   │   └── ai_service.py  # AI service integration
 │   ├── tests/         # Test suite
 │   └── Makefile       # Development commands
@@ -133,6 +138,7 @@ AI interpretations are ephemeral, stylistically constrained, and never invent fa
     ├── src/
     │   ├── pages/     # Page components
     │   ├── components/# React components
+    │   │   └── Gallery/  # Depth-camera gallery system
     │   ├── styles/    # SCSS modules
     │   ├── queries/   # GraphQL query definitions
     │   └── lib/       # Client setup
@@ -175,6 +181,7 @@ See [frontend/README.md](frontend/README.md) for detailed frontend documentation
 - SQLAlchemy (ORM)
 - SQLite (database, Postgres planned)
 - Google Gemini API (AI interpretation)
+- Cloudinary (artwork asset management)
 - Poetry (dependency management)
 
 **Frontend:**

@@ -79,6 +79,12 @@ npm run codegen:watch
 ```
 src/
 ├── components/         # React components (with .module.scss)
+│   └── Gallery/        # Depth-camera gallery system
+│       ├── GalleryView.tsx       # Container with scroll handling
+│       ├── Artwork.tsx           # Individual artwork presentation
+│       ├── useCamera.ts          # Scroll-to-camera position hook
+│       ├── calculations.ts       # Pure functions for visual state
+│       └── *.module.scss         # Component styles
 ├── pages/              # Page-level components
 │   └── Gallery.tsx
 ├── styles/

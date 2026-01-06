@@ -124,9 +124,11 @@ You are a **junior engineer**, not an architect:
   - `backend/app/main.py` — FastAPI application entrypoint
   - `backend/app/schema.py` — Strawberry GraphQL schema
   - `backend/app/ai_service.py` — AI integration (Google Gemini)
+  - `backend/app/seed.py` — Database seeding from Cloudinary
 - `frontend/` — React + TypeScript frontend (Vite)
   - `frontend/src/pages/` — Page components
   - `frontend/src/components/` — React components
+    - `frontend/src/components/Gallery/` — Depth-camera gallery system
   - `frontend/src/styles/` — SCSS modules (abstracts, base, global)
   - `frontend/src/queries/` — GraphQL query definitions (.graphql files)
   - `frontend/src/lib/` — GraphQL and TanStack Query client setup
@@ -173,24 +175,17 @@ make format                                    # Format code with ruff
 poetry run ruff format --check .               # Check if formatting needed (dry-run)
 ```
 
-### AI Integration Setup
-AI-generated artwork interpretations require a Google Gemini API key:
+### Environment Setup
+Copy `.env.example` to `.env` and configure:
 
-1. Get API key from [Google AI Studio](https://aistudio.google.com/apikey)
-2. Create `backend/.env` file:
-   ```bash
-   GEMINI_API_KEY=your_api_key_here
-   ```
-3. Free tier provides 1000 requests/day (sufficient for development)
-4. Query via GraphQL playground:
-   ```graphql
-   query {
-     generateArtworkInterpretation(artworkId: "1") {
-       content
-       generated_at
-     }
-   }
-   ```
+```bash
+cd backend
+cp .env.example .env
+```
+
+Required variables:
+- `GEMINI_API_KEY` — Get from [Google AI Studio](https://aistudio.google.com/apikey) (free tier: 1000 requests/day)
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` — Get from [Cloudinary Console](https://console.cloudinary.com/settings/api-keys)
 
 **Note**: `.env` file is gitignored - never commit API keys
 
@@ -306,6 +301,7 @@ AI is a guest voice, not a curator.
 - Complete GraphQL schema with Artist, Artwork, Collection, AIInterpretation types
 - Database persistence with SQLAlchemy (SQLite)
 - AI integration with Google Gemini API (multimodal vision)
+- Cloudinary integration for dynamic artwork asset management
 - All queries functional: `artist()`, `collections()`, `collection(id)`, `artwork(id)`, `generateArtworkInterpretation(artworkId)`
 - Comprehensive test suite (9 unit + 6 integration tests)
 - Code linted and formatted with Ruff
@@ -316,8 +312,10 @@ AI is a guest voice, not a curator.
 - TanStack Query + graphql-request configured
 - GraphQL Code Generator working (generates types from backend schema)
 - SCSS Modules with modern architecture (abstracts, base, global)
+- Immersive depth-camera gallery navigation using CSS 3D transforms
+- Gallery components: GalleryView, Artwork, useCamera hook, calculations module
+- Forest background image for atmospheric effect
 - Full end-to-end integration with backend
-- Gallery page fetching and displaying artist data
 - All TypeScript compilation passing
 
-**Full-stack MVP functional** - backend and frontend communicating successfully.
+**Gallery MVP functional** - immersive artwork viewing experience with real artwork from Cloudinary.
