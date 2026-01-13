@@ -61,7 +61,8 @@ def seed_database(max_artworks: int = 20):
         db.query(Artist).delete()
 
         # Create artist
-        artist = Artist(name="Jack Pillemer")
+        artist = Artist(name="Jack Pillemer", bio="""I live in Jerusalem. I paint in Jerusalem - mostly. I enjoy the air, the color and shapes in and around Jerusalem. There must be shade, quiet and something of interest - and that's it. Most times I would be with Ben Marom - friend, colleague and often mentor. It would likely be a Friday. Find a spot, set up the easel or the folding table and begin.
+I started studying with Tzahi Gil who taught me the basics. Eli Shamir gave me some direction on watercolor and Naomi at the Israel Museum insisted I look and paint what I see. Marek Yanai took me back to basics with such intensity and skill and Yael Morag helped me celebrate with watercolor. Ben and I discuss the spots, the contrasts and the geometrical shapes.""")
         db.add(artist)
         db.flush()
 

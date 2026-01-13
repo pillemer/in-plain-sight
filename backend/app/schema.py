@@ -11,10 +11,11 @@ from app.repository import ArtistRepository, ArtworkRepository, CollectionReposi
 class Artist:
     id: str
     name: str
+    bio: str
 
     @classmethod
     def from_model(cls, model: models.Artist) -> "Artist":
-        return cls(id=str(model.id), name=model.name)
+        return cls(id=str(model.id), name=model.name, bio=model.bio)
 
 
 @strawberry.type

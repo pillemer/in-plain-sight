@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { graphqlClient } from '../lib/graphqlClient'
 import { GetCollectionsDocument } from '../generated/graphql'
 import { GalleryView } from '../components/Gallery'
+import { Header } from '../components/Navigation/Header'
 import styles from './Gallery.module.scss'
 
 export function Gallery() {
@@ -45,5 +46,10 @@ export function Gallery() {
     return <div className={styles.loading}>No artworks found</div>
   }
 
-  return <GalleryView artworks={allArtworks} />
+  return (
+    <>
+      <Header collections={data.collections.map(c => ({ id: c.id, title: c.title }))} />
+      <GalleryView artworks={allArtworks} />
+    </>
+  )
 }

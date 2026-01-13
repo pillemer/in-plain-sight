@@ -1,0 +1,79 @@
+@use '../../styles/abstracts' as *;
+
+.dropdown {
+  position: fixed;
+  top: 52px; // Height of main header (adjust based on actual header height)
+  left: 0;
+  right: 0;
+  z-index: 999; // Below the main header (which is 1000)
+  background: rgba(250, 250, 250, 0.3);
+  backdrop-filter: blur(4px);
+  padding: $spacing-xs 0;
+
+  // Slide down animation
+  animation: slideDown 0.3s ease-out;
+  transform-origin: top;
+
+  @include respond-to(desktop) {
+    top: 56px; // Slightly larger on desktop
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-md;
+
+  @include respond-to(desktop) {
+    gap: $spacing-lg;
+  }
+}
+
+.item {
+  margin: 0;
+}
+
+.link {
+  font-family: $font-family-serif;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  text-decoration: none;
+  padding: $spacing-xs $spacing-md;
+  display: block;
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(210, 180, 140, 0.25); // Warm tan/beige
+    text-decoration: none;
+  }
+}
+
+.linkDisabled {
+  font-family: $font-family-serif;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  padding: $spacing-xs $spacing-md;
+  display: block;
+  opacity: 0.4;
+  cursor: not-allowed;
+}

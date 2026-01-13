@@ -1,0 +1,68 @@
+@use '../styles/abstracts' as *;
+
+.container {
+    color: $color-text-primary;
+    padding: $spacing-lg;
+    max-width: 800px; // Constrain width for readability
+    margin: 0 auto; // Center horizontally
+    padding-top: $spacing-2xl; // Room for future header
+
+    h1 {
+        font-family: $font-family-serif;
+        font-size: $font-size-title;
+        margin-bottom: $spacing-lg;
+        text-align: center;
+
+        @include respond-to(desktop) {
+            font-size: $font-size-display;
+        }
+    }
+
+    p {
+        font-family: $font-family-sans;
+        font-size: $font-size-base;
+        line-height: $line-height-base; // Makes multi-line text readable
+        white-space: pre-wrap; // Preserves line breaks from database
+
+        @include respond-to(desktop) {
+            font-size: $font-size-large;
+            line-height: 1.8; // Even more spacious on desktop
+        }
+    }
+}
+
+.loading {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-family-serif;
+    font-size: $font-size-large;
+    color: $color-text-secondary;
+    background-color: $color-background;
+}
+
+.errorContainer {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-lg;
+    background-color: $color-background;
+}
+
+.error {
+    color: #c41e3a;
+    font-weight: 500;
+    padding: $spacing-lg;
+    text-align: center;
+}
+
+.debug {
+    font-size: $font-size-small;
+    color: $color-text-secondary;
+    margin-top: $spacing-sm;
+    overflow-x: auto;
+    max-width: 80vw;
+}
