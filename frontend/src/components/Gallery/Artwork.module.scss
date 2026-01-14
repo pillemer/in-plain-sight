@@ -13,6 +13,11 @@
   transition:
     transform 0.05s linear,
     opacity 0.1s ease-out;
+
+  // Note: content-visibility: auto is NOT compatible with 3D transforms
+  // It breaks the transform context and causes sizing issues
+  // The contain-intrinsic-size property alone provides some rendering hints
+  contain-intrinsic-size: auto 65vh;
 }
 
 // Horizontal offset patterns for visual interest

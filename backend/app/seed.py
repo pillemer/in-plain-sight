@@ -74,8 +74,13 @@ I started studying with Tzahi Gil who taught me the basics. Eli Shamir gave me s
         # Create artworks from Cloudinary images
         for image in images:
             public_id = image["public_id"]
-            # Construct the URL (format is automatically detected)
-            image_url = f"{CLOUDINARY_BASE_URL}/{public_id}"
+            # Construct optimized URL with Cloudinary transformations
+            # f_auto: Auto-deliver WebP/AVIF/JPEG XL based on browser
+            # q_auto:good: Intelligent quality compression (balances quality/size)
+            # w_1200: Max width 1200px (gallery shows 60-80vw, 1200px covers 2x retina)
+            # dpr_auto: Serve 2x images to Retina displays automatically
+            transformations = "f_auto,q_auto:good,w_1200,dpr_auto"
+            image_url = f"{CLOUDINARY_BASE_URL}/{transformations}/{public_id}"
 
             artwork = Artwork(
                 title="",  # No metadata yet

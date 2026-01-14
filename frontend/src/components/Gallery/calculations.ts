@@ -163,3 +163,57 @@ export function calculateScrollProgress(
   if (maxScroll <= 0) return 0;
   return Math.max(0, Math.min(100, (scrollTop / maxScroll) * 100));
 }
+
+/**
+ * Image loading strategy type.
+ * - 'eager': Load immediately (for above-the-fold content)
+ * - 'preload': Load with high priority (for upcoming content)
+ * - 'lazy': Load when needed (for distant content)
+ */
+export type LoadingStrategy = 'eager' | 'preload' | 'lazy';
+
+/**
+ * Calculate the optimal loading strategy for an artwork based on its position
+ * relative to the camera.
+ *
+ * Strategy:
+ * - Last 2 artworks: Always eager (visible at scroll=0, camera starts past them)
+ * - Within preload zone (behind camera): Preload with high priority
+ * - Everything else: Lazy load
+ *
+ * @param artworkIndex - Index of the artwork (0-based)
+ * @param artworkZ - Z position of the artwork
+ * @param cameraZ - Current Z position of the camera
+ * @param totalArtworks - Total number of artworks in gallery
+ * @param config - Camera configuration
+ * @returns Loading strategy for this artwork
+ */
+export function calculateLoadingStrategy(
+  artworkIndex: number,
+  artworkZ: number,
+  cameraZ: number,
+  totalArtworks: number,
+  config: CameraConfig = DEFAULT_CONFIG
+): LoadingStrategy {
+  // Always eager-load LAST 2 artworks (visible at scroll=0)
+  // Camera starts past all artworks, so last ones are closest to initial camera position
+  if (artworkIndex >= totalArtworks - 2) {
+    return 'eager';
+  }
+
+  // Distance from camera (positive = ahead, negative = behind)
+  const distance = artworkZ - cameraZ;
+
+  // Preload zone: 3 artworks BEHIND camera (where we're scrolling toward)
+  // Using depthGap * 3 as threshold (roughly next 3 artworks in scroll direction)
+  const preloadThreshold = config.depthGap * 3;
+
+  // Preload artworks behind camera (negative distance) within threshold
+  // As camera moves backward (scrolling down), these are the artworks we're approaching
+  if (distance < 0 && Math.abs(distance) < preloadThreshold) {
+    return 'preload';
+  }
+
+  // Everything else: lazy load
+  return 'lazy';
+}

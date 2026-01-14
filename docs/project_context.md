@@ -41,7 +41,7 @@ This layer is for technically minded visitors only.
 ### Initial Deliverable
 
 - One collection landing page
-- Small gallery of artworks
+- Small gallery of artworks (10-20 initially, may grow to 50+)
 - Fully real backend + frontend
 - Production-quality design and structure
 
@@ -55,6 +55,16 @@ This layer is for technically minded visitors only.
 - user accounts
 - CMS
 - saved AI output
+
+### Performance & Scale Considerations
+
+**Future optimization ( Virtual Scrolling):**
+When gallery grows beyond **50 artworks**, consider implementing DOM windowing:
+- Only render visible + buffer artworks
+- Recycle DOM nodes during scroll
+- Libraries: React Window or React Virtuoso
+- Signal: DOM node count > 1000 or scrolling jank appears
+
 
 ## 4. Domain Model
 

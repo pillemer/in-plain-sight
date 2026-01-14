@@ -3,6 +3,7 @@ import { useCamera } from './useCamera';
 import {
   artworkZPosition,
   calculateArtworkState,
+  calculateLoadingStrategy,
   calculateRunwayHeight,
   type CameraConfig,
   DEFAULT_CONFIG,
@@ -58,6 +59,13 @@ export function GalleryView({
         {artworks.map((artwork, index) => {
           const artworkZ = artworkZPosition(index, config);
           const visualState = calculateArtworkState(artworkZ, cameraZ, config);
+          const loadingStrategy = calculateLoadingStrategy(
+            index,
+            artworkZ,
+            cameraZ,
+            artworks.length,
+            config
+          );
 
           return (
             <Artwork
@@ -67,6 +75,7 @@ export function GalleryView({
               imageUrl={artwork.imageUrl}
               visualState={visualState}
               offsetDirection={getOffsetDirection(index)}
+              loadingStrategy={loadingStrategy}
             />
           );
         })}

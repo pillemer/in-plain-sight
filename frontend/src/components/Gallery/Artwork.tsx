@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { ArtworkVisualState } from './calculations';
+import type { ArtworkVisualState, LoadingStrategy } from './calculations';
 import styles from './Artwork.module.scss';
 
 interface ArtworkProps {
@@ -8,6 +8,7 @@ interface ArtworkProps {
   imageUrl: string;
   visualState: ArtworkVisualState;
   offsetDirection: 'left' | 'right' | 'center';
+  loadingStrategy: LoadingStrategy;
 }
 
 /**
@@ -20,6 +21,7 @@ export const Artwork = memo(function Artwork({
   imageUrl,
   visualState,
   offsetDirection,
+  loadingStrategy,
 }: ArtworkProps) {
   const { translateZ, scale, opacity, zIndex, isVisible, isFocused } =
     visualState;
@@ -57,7 +59,8 @@ export const Artwork = memo(function Artwork({
           src={imageUrl}
           alt={title || 'Artwork'}
           className={styles.image}
-          loading="eager"
+          loading={loadingStrategy === 'eager' ? 'eager' : 'lazy'}
+          fetchPriority={loadingStrategy === 'preload' ? 'high' : 'auto'}
         />
         {title && <h3 className={titleClass}>{title}</h3>}
       </div>
