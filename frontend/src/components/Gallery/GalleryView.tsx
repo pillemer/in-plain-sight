@@ -44,7 +44,7 @@ export function GalleryView({
   // Calculate runway height based on artwork count
   // Using a reasonable viewport height estimate; actual will be dynamic
   const runwayHeight = useMemo(
-    () => calculateRunwayHeight(artworks.length, window.innerHeight, config),
+    () => calculateRunwayHeight(artworks.length, window.innerHeight),
     [artworks.length, config]
   );
 
