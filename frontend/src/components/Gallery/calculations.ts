@@ -138,7 +138,6 @@ export function calculateArtworkState(
 export function calculateRunwayHeight(
   artworkCount: number,
   viewportHeight: number,
-  config: CameraConfig = DEFAULT_CONFIG
 ): number {
   if (artworkCount <= 1) return viewportHeight;
 
