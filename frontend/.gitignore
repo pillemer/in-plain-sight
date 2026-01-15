@@ -12,9 +12,6 @@ dist
 dist-ssr
 *.local
 
-# GraphQL Code Generator output
-src/generated
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
