@@ -72,6 +72,20 @@
   }
 }
 
+.cardClickable {
+  pointer-events: auto;
+  cursor: pointer;
+  // Allow touch scrolling to pass through on mobile
+  touch-action: pan-y;
+
+  &:hover {
+    // Subtle hover indication
+    .image {
+      filter: brightness(1.05);
+    }
+  }
+}
+
 .image {
   // Fixed dimensions for better performance - browser can allocate space early
   width: auto;

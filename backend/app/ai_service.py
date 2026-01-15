@@ -138,7 +138,7 @@ class AIService:
         return f"""You are writing a curator's note for an art gallery visitor.
 Write a brief, observational interpretation of this artwork based on what you see in the image.
 
-Artwork: "{artwork.title}" by {artwork.artist.name}
+Artwork: "{artwork.title}"
 
 Focus on what you observe in the image:
 - Colors and palette
@@ -148,6 +148,7 @@ Focus on what you observe in the image:
 
 Constraints:
 - Write in third person
+- Always refer to the creator as "the artist" (never by name)
 - 1-2 paragraphs maximum
 - Base your interpretation only on what you can see in the image
 - Do not invent facts (dates, materials, provenance, artist intent)

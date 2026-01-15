@@ -1,0 +1,8 @@
+query GenerateArtworkInterpretation($artworkId: String!) {
+  generateArtworkInterpretation(artworkId: $artworkId) {
+    id
+    content
+    generatedAt
+    context
+  }
+}

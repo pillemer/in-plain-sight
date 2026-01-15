@@ -14,6 +14,7 @@ interface CameraState {
 interface UseCameraOptions {
   artworkCount: number;
   config?: CameraConfig;
+  locked?: boolean;
 }
 
 interface UseCameraReturn {
@@ -29,6 +30,7 @@ interface UseCameraReturn {
 export function useCamera({
   artworkCount,
   config = DEFAULT_CONFIG,
+  locked = false,
 }: UseCameraOptions): UseCameraReturn {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [state, setState] = useState<CameraState>(() => {
@@ -47,6 +49,9 @@ export function useCamera({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    // If camera is locked, skip scroll handling entirely
+    if (locked) return;
 
     let ticking = false;
 
@@ -90,7 +95,7 @@ export function useCamera({
     return () => {
       container.removeEventListener('scroll', handleScroll);
     };
-  }, [artworkCount]);
+  }, [artworkCount, locked]);
 
   return {
     containerRef,

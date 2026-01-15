@@ -9,6 +9,7 @@ interface ArtworkProps {
   visualState: ArtworkVisualState;
   offsetDirection: 'left' | 'right' | 'center';
   loadingStrategy: LoadingStrategy;
+  onArtworkClick?: (id: string) => void;
 }
 
 /**
@@ -17,11 +18,13 @@ interface ArtworkProps {
  * Memoized to prevent unnecessary re-renders.
  */
 export const Artwork = memo(function Artwork({
+  id,
   title,
   imageUrl,
   visualState,
   offsetDirection,
   loadingStrategy,
+  onArtworkClick,
 }: ArtworkProps) {
   const { translateZ, scale, opacity, zIndex, isVisible, isFocused } =
     visualState;
@@ -48,13 +51,22 @@ export const Artwork = memo(function Artwork({
     ? `${styles.title} ${styles.titleVisible}`
     : styles.title;
 
+  const handleClick = () => {
+    if (isFocused && onArtworkClick) {
+      onArtworkClick(id);
+    }
+  };
+
   return (
     <article
       className={`${styles.wrapper} ${offsetClass}`}
       style={transformStyle}
       aria-hidden={!isFocused}
     >
-      <div className={styles.card}>
+      <div
+        className={`${styles.card} ${isFocused ? styles.cardClickable : ''}`}
+        onClick={handleClick}
+      >
         <img
           src={imageUrl}
           alt={title || 'Artwork'}

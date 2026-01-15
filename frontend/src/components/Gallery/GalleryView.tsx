@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useCamera } from './useCamera';
 import {
   artworkZPosition,
@@ -9,12 +9,14 @@ import {
   DEFAULT_CONFIG,
 } from './calculations';
 import { Artwork } from './Artwork';
+import { ArtworkModal } from './ArtworkModal';
 import styles from './GalleryView.module.scss';
 
 interface ArtworkData {
   id: string;
   title: string;
   imageUrl: string;
+  artistName: string;
 }
 
 interface GalleryViewProps {
@@ -30,9 +32,13 @@ export function GalleryView({
   artworks,
   config = DEFAULT_CONFIG,
 }: GalleryViewProps) {
+  const [selectedArtworkId, setSelectedArtworkId] = useState<string | null>(null);
+  const isCameraLocked = selectedArtworkId !== null;
+
   const { containerRef, cameraZ, scrollProgress } = useCamera({
     artworkCount: artworks.length,
     config,
+    locked: isCameraLocked,
   });
 
   // Calculate runway height based on artwork count
@@ -47,6 +53,14 @@ export function GalleryView({
     // First artwork centered, then alternate
     if (index === 0) return 'center';
     return index % 2 === 1 ? 'left' : 'right';
+  };
+
+  const handleArtworkClick = (artworkId: string) => {
+    setSelectedArtworkId(artworkId);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedArtworkId(null);
   };
 
   return (
@@ -76,6 +90,7 @@ export function GalleryView({
               visualState={visualState}
               offsetDirection={getOffsetDirection(index)}
               loadingStrategy={loadingStrategy}
+              onArtworkClick={handleArtworkClick}
             />
           );
         })}
@@ -93,6 +108,22 @@ export function GalleryView({
           {Math.round(scrollProgress)}%
         </span>
       </div>
+
+      {/* Artwork Modal */}
+      {selectedArtworkId && (() => {
+        const selectedArtwork = artworks.find(a => a.id === selectedArtworkId);
+        if (!selectedArtwork) return null;
+
+        return (
+          <ArtworkModal
+            artworkId={selectedArtwork.id}
+            artworkTitle={selectedArtwork.title}
+            artworkImageUrl={selectedArtwork.imageUrl}
+            artistName={selectedArtwork.artistName}
+            onClose={handleCloseModal}
+          />
+        );
+      })()}
     </div>
   );
 }

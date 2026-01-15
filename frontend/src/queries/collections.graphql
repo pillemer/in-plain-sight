@@ -7,6 +7,10 @@ query GetCollections {
       id
       title
       imageUrl
+      artist {
+        id
+        name
+      }
     }
   }
 }

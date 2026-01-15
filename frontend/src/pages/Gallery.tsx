@@ -39,6 +39,7 @@ export function Gallery() {
       id: artwork.id,
       title: artwork.title,
       imageUrl: artwork.imageUrl,
+      artistName: artwork.artist.name,
     }))
   )
 

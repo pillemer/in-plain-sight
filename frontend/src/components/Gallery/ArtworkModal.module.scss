@@ -1,0 +1,326 @@
+@use '../../styles/abstracts' as *;
+
+// Backdrop - dims and blurs gallery behind
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md;
+  overflow-y: auto;
+
+  // Fade-in animation
+  animation: fadeIn 0.2s ease-out;
+
+  @include respond-to(desktop) {
+    padding: $spacing-lg;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// Shared button styling for all modal buttons - glassmorphism style
+%modalButton {
+  position: fixed;
+  bottom: $spacing-md;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: $spacing-xs $spacing-sm;
+  font-family: $font-family-sans;
+  font-size: $font-size-small;
+  color: $color-text-primary;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  z-index: 10001;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.85);
+    transform: translateY(-1px);
+  }
+
+  @include respond-to(tablet) {
+    bottom: $spacing-lg;
+  }
+}
+
+// Return button (shared between both layers)
+.returnButton {
+  @extend %modalButton;
+  left: $spacing-md;
+
+  @include respond-to(tablet) {
+    left: $spacing-lg;
+  }
+}
+
+.returnArrow {
+  font-size: 1.2em;
+}
+
+// Back to Art View button (info overlay only)
+.backToArtButton {
+  @extend %modalButton;
+  right: $spacing-md;
+
+  @include respond-to(tablet) {
+    right: $spacing-lg;
+  }
+}
+
+// Layer 1: Artwork View (clean, full-screen image)
+.artworkView {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none; // Allow clicks to pass through to buttons
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.artworkImage {
+  max-width: 95vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border: 8px solid white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  @include respond-to(tablet) {
+    max-width: 93vw;
+    max-height: 88vh;
+  }
+
+  @include respond-to(desktop) {
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+}
+
+// View Interpretation button (artwork view only)
+.viewInterpretationButton {
+  @extend %modalButton;
+  right: $spacing-md;
+
+  @include respond-to(tablet) {
+    right: $spacing-lg;
+  }
+}
+
+// Layer 2: Info Overlay (artwork details + AI interpretation)
+.infoOverlay {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 8px;
+  overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  @include respond-to(tablet) {
+    max-height: 85vh;
+  }
+}
+
+.infoContent {
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+
+  @include respond-to(tablet) {
+    padding: $spacing-xl;
+  }
+
+  @include respond-to(desktop) {
+    flex-direction: row;
+    gap: $spacing-xl;
+  }
+}
+
+.infoImage {
+  width: 100%;
+  max-height: 50vh;
+  object-fit: contain;
+  border: 5px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  @include respond-to(desktop) {
+    width: 50%;
+    max-height: 70vh;
+  }
+}
+
+.infoText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.artworkMetadata {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.artworkTitle {
+  font-family: $font-family-serif;
+  font-size: $font-size-title;
+  font-weight: 400;
+  color: $color-text-primary;
+  margin: 0;
+  line-height: $line-height-tight;
+
+  @include respond-to(desktop) {
+    font-size: $font-size-display;
+  }
+}
+
+.artistName {
+  font-family: $font-family-sans;
+  font-size: $font-size-large;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+.metadataPlaceholder {
+  font-family: $font-family-sans;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  margin: 0;
+  font-style: italic;
+}
+
+.divider {
+  height: 1px;
+  background: $color-border;
+  margin: $spacing-sm 0;
+}
+
+.interpretationSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.interpretationHeading {
+  font-family: $font-family-sans;
+  font-size: $font-size-large;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.infoIcon {
+  position: relative;
+  margin-left: $spacing-xs;
+  font-size: 0.85em;
+  opacity: 0.6;
+  cursor: help;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  // CSS-based tooltip
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: 4px;
+    font-size: $font-size-small;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10002;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+.interpretationText {
+  font-family: $font-family-serif;
+  font-size: $font-size-base;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+  margin: 0;
+  white-space: pre-line;
+
+  @include respond-to(desktop) {
+    font-size: $font-size-large;
+  }
+}
+
+.loadingText {
+  font-family: $font-family-sans;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  margin: 0;
+  font-style: italic;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.errorText {
+  font-family: $font-family-sans;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  margin: 0;
+  font-style: italic;
+}

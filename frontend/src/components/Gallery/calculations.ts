@@ -9,7 +9,6 @@ export interface CameraConfig {
   maxVisible: number;      // Distance at which artwork is fully faded
   cullBehind: number;      // Distance behind camera to stop rendering
   cullAhead: number;       // Distance ahead of camera to stop rendering
-  maxBlur: number;         // Maximum blur in pixels
   behindFadeFactor: number; // How much faster items behind fade (1.0 = same as ahead)
 }
 
@@ -19,7 +18,6 @@ export const DEFAULT_CONFIG: CameraConfig = {
   maxVisible: 1500,      // Reduced visibility range
   cullBehind: 600,       // Cull sooner behind
   cullAhead: 2000,       // Keep more visible ahead
-  maxBlur: 15,           // Not currently used, kept for future
   behindFadeFactor: 2.0, // Fade faster behind
 };
 
