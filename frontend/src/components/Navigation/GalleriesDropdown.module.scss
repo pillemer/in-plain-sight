@@ -1,32 +1,27 @@
 @use '../../styles/abstracts' as *;
 
 .dropdown {
-  position: fixed;
-  top: 52px; // Height of main header (adjust based on actual header height)
+  position: absolute;
+  top: 100%; // Position directly below the parent container
   left: 0;
   right: 0;
   z-index: 999; // Below the main header (which is 1000)
-  background: rgba(250, 250, 250, 0.3);
+  background: rgba(250, 250, 250, 0.5);
   backdrop-filter: blur(4px);
-  padding: $spacing-xs 0;
 
   // Slide down animation
   animation: slideDown 0.3s ease-out;
   transform-origin: top;
-
-  @include respond-to(desktop) {
-    top: 56px; // Slightly larger on desktop
-  }
 }
 
 @keyframes slideDown {
   0% {
     opacity: 0;
-    transform: translateY(-100%);
+    transform: translateY(-200%);
   }
   50% {
     opacity: 0.5;
-    transform: translateY(-50%);
+    transform: translateY(-100%);
   }
   100% {
     opacity: 1;
@@ -75,5 +70,5 @@
   padding: $spacing-xs $spacing-md;
   display: block;
   opacity: 0.4;
-  cursor: not-allowed;
+  cursor: pointer;
 }

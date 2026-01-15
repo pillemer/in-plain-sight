@@ -42,23 +42,27 @@ export function Header({ collections, title = "Art in the Forest" }: HeaderProps
                 <h1 className={styles.title}>{title}</h1>
 
                 <nav className={styles.nav}>
-                    <div ref={dropdownRef} className={styles.dropdownContainer}>
+                    <div className={styles.dropdownContainer}>
                         <button
                             onClick={toggleDropdown}
                             className={styles.link}
                         >
                             Galleries
                         </button>
-                        {isDropdownOpen && (
-                            <GalleriesDropdown
-                                collections={collections}
-                                onSelect={() => setIsDropdownOpen(false)}
-                            />
-                        )}
                     </div>
                     <Link to="/about" className={styles.link}>About</Link>
                 </nav>
             </div>
+
+            {/* Render dropdown at header level so it can position relative to header */}
+            {isDropdownOpen && (
+                <div ref={dropdownRef}>
+                    <GalleriesDropdown
+                        collections={collections}
+                        onSelect={() => setIsDropdownOpen(false)}
+                    />
+                </div>
+            )}
         </header>
     )
 }
