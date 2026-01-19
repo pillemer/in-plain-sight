@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { request } from 'graphql-request';
 import { GenerateArtworkInterpretationDocument } from '../../generated/graphql';
+import { graphqlClient } from '../../lib/graphqlClient';
 import styles from './ArtworkModal.module.scss';
 
 interface ArtworkModalProps {
@@ -32,11 +32,11 @@ export function ArtworkModal({
   const { data, isLoading, error } = useQuery({
     queryKey: ['artwork-interpretation', artworkId],
     queryFn: async () => {
-      const result = await request(
-        'http://localhost:8000/graphql',
+      const result = await graphqlClient.request(
         GenerateArtworkInterpretationDocument,
         { artworkId }
       );
+
       return result.generateArtworkInterpretation;
     },
     enabled: viewMode === 'info', // Only fetch when user switches to info view
