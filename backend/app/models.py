@@ -13,7 +13,7 @@ class Artist(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    bio: Mapped[str] = mapped_column(String(255))
+    bio: Mapped[str] = mapped_column(Text)
 
     # Relationships
     artworks: Mapped[list["Artwork"]] = relationship(back_populates="artist")
