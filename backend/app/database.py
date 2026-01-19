@@ -9,7 +9,9 @@ from app.models import Base
 # Tests can override this to use a separate test database
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./gallery.db")
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}, echo=True)
+# Only use check_same_thread for SQLite (Postgres doesn't need it)
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=connect_args, echo=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
