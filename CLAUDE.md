@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**In Plain Sight** is a single-page art gallery website presenting one artist's work through two layers:
+**In Plain Sight** is an art gallery website presenting one artist's work through two layers:
 
 1. **The Gallery** (primary): A calm, non-technical art experience
 2. **Behind the Curtain** (hidden): An optional overlay exposing architecture, decisions, and AI usage
@@ -123,12 +123,16 @@ You are a **junior engineer**, not an architect:
 - `backend/` — Python backend (FastAPI + Strawberry GraphQL)
   - `backend/app/main.py` — FastAPI application entrypoint
   - `backend/app/schema.py` — Strawberry GraphQL schema
+  - `backend/app/models.py` — SQLAlchemy database models
+  - `backend/app/repository.py` — Data access layer
+  - `backend/app/database.py` — Database engine and session configuration
   - `backend/app/ai_service.py` — AI integration (Google Gemini)
   - `backend/app/seed.py` — Database seeding from Cloudinary
 - `frontend/` — React + TypeScript frontend (Vite)
-  - `frontend/src/pages/` — Page components
+  - `frontend/src/pages/` — Page components (Gallery, Bio)
   - `frontend/src/components/` — React components
-    - `frontend/src/components/Gallery/` — Depth-camera gallery system
+    - `frontend/src/components/Gallery/` — Depth-camera gallery system (includes ArtworkModal)
+    - `frontend/src/components/Navigation/` — Header and GalleriesDropdown
   - `frontend/src/styles/` — SCSS modules (abstracts, base, global)
   - `frontend/src/queries/` — GraphQL query definitions (.graphql files)
   - `frontend/src/lib/` — GraphQL and TanStack Query client setup
@@ -239,12 +243,12 @@ npx tsc --noEmit                               # Type check without building
 
 ### Backend
 - Python 3.13+, FastAPI, Strawberry GraphQL, Poetry
-- Domain-oriented types: `Artwork`, `Collection`, `Artist`, `AI_Interpretation`, `Engineering_Note`
-- SQLite initially (Postgres later)
+- Domain-oriented types: `Artwork`, `Collection`, `Artist`, `AIInterpretation`
+- SQLite for local dev/tests, Neon Postgres for production (Decision 0018)
 - Simple, explainable data access — no premature abstraction
 
 ### Frontend
-- Vite + React 18 + TypeScript
+- Vite + React 19 + TypeScript
 - TanStack Query for data fetching
 - graphql-request + GraphQL Code Generator for type-safe GraphQL
 - React Router for routing
@@ -280,7 +284,7 @@ AI is a guest voice, not a curator.
 - Production-quality structure
 
 **Explicitly out of scope**:
-- Multiple collections, search, purchasing
+- Multiple populated collections (navigation scaffolding exists per Decision 0016, but only one collection has data), search, purchasing
 - User accounts, CMS, analytics
 - Saved AI output (initially)
 
@@ -294,28 +298,42 @@ AI is a guest voice, not a curator.
 4. Favor editing existing files over creating new ones
 5. Keep solutions simple and scoped — no over-engineering
 
+## Deployment
+
+- **Frontend:** Vercel (auto-deploys from `/frontend` on push)
+- **Backend:** Railway (auto-deploys from `/backend` on push)
+- **Production database:** Neon Postgres (free tier) — Decision 0018
+- **Local database:** SQLite (`gallery.db`)
+- **Alembic** is a dependency for future migrations but not yet initialized
+
+See Decision 0012 for full deployment architecture and Decision 0018 for database details.
+
 ## Current Status
 
 **Backend (Complete):**
 - FastAPI + Strawberry GraphQL server running
 - Complete GraphQL schema with Artist, Artwork, Collection, AIInterpretation types
-- Database persistence with SQLAlchemy (SQLite)
+- Database persistence with SQLAlchemy (SQLite locally, Neon Postgres in production)
 - AI integration with Google Gemini API (multimodal vision)
 - Cloudinary integration for dynamic artwork asset management
 - All queries functional: `artist()`, `collections()`, `collection(id)`, `artwork(id)`, `generateArtworkInterpretation(artworkId)`
-- Comprehensive test suite (9 unit + 6 integration tests)
+- Test suite covering schema, AI service, AI integration, and health endpoints
 - Code linted and formatted with Ruff
 - CORS configured for frontend origin
+- Deployed on Railway (Decision 0012)
 
 **Frontend (Complete):**
-- Vite + React 18 + TypeScript setup
+- Vite + React 19 + TypeScript setup
 - TanStack Query + graphql-request configured
 - GraphQL Code Generator working (generates types from backend schema)
 - SCSS Modules with modern architecture (abstracts, base, global)
 - Immersive depth-camera gallery navigation using CSS 3D transforms
-- Gallery components: GalleryView, Artwork, useCamera hook, calculations module
+- Gallery components: GalleryView, Artwork, ArtworkModal, useCamera hook, calculations module
+- Navigation system: Header with GalleriesDropdown (Decision 0016)
+- Multi-page routing: Gallery (`/`) and Bio/About (`/about`) pages
 - Forest background image for atmospheric effect
 - Full end-to-end integration with backend
 - All TypeScript compilation passing
+- Deployed on Vercel (Decision 0012)
 
-**Gallery MVP functional** - immersive artwork viewing experience with real artwork from Cloudinary.
+**Deployed and functional** — immersive gallery with artwork modal, bio page, navigation system, and live production deployment (Vercel + Railway).

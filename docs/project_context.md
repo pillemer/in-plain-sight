@@ -49,7 +49,7 @@ This layer is for technically minded visitors only.
 > A finished room in a castle, even if no other doors exist yet.
 
 **Explicitly out of scope (for now):**
-- multiple collections
+- multiple collections *(navigation scaffolding exists per Decision 0016, but only one collection is populated)*
 - search
 - purchasing
 - user accounts
@@ -71,7 +71,7 @@ When gallery grows beyond **50 artworks**, consider implementing DOM windowing:
 ### Artwork
 
 - Single artist
-- Can belong to multiple collections
+- Belongs to at most one collection (simplified from original multi-collection concept — see Decision 0005)
 - **Has:**
   - technical metadata (e.g. medium, dimensions)
   - image(s)
@@ -80,7 +80,7 @@ When gallery grows beyond **50 artworks**, consider implementing DOM windowing:
 ### Collection
 
 - Curated grouping of artworks
-- Non-exclusive
+- Exclusive per artwork for MVP (one-to-many relationship — see Decision 0005)
 - Conceptual, not hierarchical
 
 This is a domain-driven model, not an image gallery.
@@ -137,9 +137,9 @@ AI is a guest voice, not a curator.
 
 ### Frontend
 
-- Modern React-based stack (framework choice intentionally deferred)
+- Vite + React 19 + TypeScript (resolved in Decision 0011)
 - No Tailwind
-- Styling via SCSS/Sass or equivalent
+- SCSS Modules for component-scoped styling
 
 **Goals:**
 - visual restraint
@@ -152,7 +152,7 @@ Documentation is a first-class artifact.
 
 ### Decision Records
 
-Stored in `docs/decisions/`
+Stored in `docs/decision_log/`
 
 Only for decisions that:
 - meaningfully constrain future work
@@ -185,11 +185,11 @@ This is intentional and demonstrable.
 
 ## 9. Explicitly Deferred Decisions
 
-The following are intentionally unresolved and will be decided later, in context:
+The following were intentionally deferred and will be (or have been) decided in context:
 
 - How the curtain layer is triggered
 - Final tone calibration for AI-generated descriptions
-- Final frontend framework choice
+- Final frontend framework choice — *Resolved: Vite + React 19 + TypeScript (Decision 0011)*
 
 These are not gaps; they are staged decisions.
 
