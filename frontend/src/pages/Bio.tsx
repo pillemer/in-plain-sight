@@ -3,6 +3,7 @@ import { graphqlClient } from "../lib/graphqlClient";
 import { GetArtistDocument, GetCollectionsDocument } from "../generated/graphql";
 import { Header } from "../components/Navigation/Header";
 import styles from './Bio.module.scss'
+import artist from '../../public/artist.avif'
 
 export function Bio() {
     const { data, isLoading, error } = useQuery({
@@ -44,9 +45,18 @@ export function Bio() {
                     title="About the Artist"
                 />
             )}
-            <div className={styles.container} >
-                <h1>{data.artist.name}</h1>
-                <p>{data.artist.bio}</p>
+            <div className={styles.page}>
+                <div className={styles.postcard}>
+                    <div className={styles.imagePanel}>
+                        <img src={artist} alt={data.artist.name} />
+                        <span className={styles.photoCredit}>Photo by Claudio Amdur, 2017</span>
+                    </div>
+                    <div className={styles.infoPanel}>
+                        <h1>{data.artist.name}</h1>
+                        <div className={styles.divider} />
+                        <p>{data.artist.bio}</p>
+                    </div>
+                </div>
             </div>
         </>
     )

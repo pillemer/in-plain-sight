@@ -1,32 +1,100 @@
 @use '../styles/abstracts' as *;
 
-.container {
-    color: $color-text-primary;
-    padding: $spacing-lg;
-    max-width: 800px; // Constrain width for readability
-    margin: 0 auto; // Center horizontally
-    padding-top: $spacing-2xl; // Room for future header
+.page {
+    min-height: 100vh;
+    background: $color-background;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-md;
+    padding-top: calc($spacing-2xl + $spacing-md);
+}
+
+.postcard {
+    display: flex;
+    flex-direction: column;
+    border: 8px solid white;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 1100px;
+    width: 100%;
+
+    @include respond-to(tablet) {
+        flex-direction: row;
+        // On tablet+, constrain height so text fits without scrolling
+        height: calc(85vh - $spacing-2xl);
+    }
+}
+
+.imagePanel {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: $color-surface;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    // On mobile, constrain image height so text is visible
+    max-height: 40vh;
+
+    @include respond-to(tablet) {
+        max-height: none;
+    }
+}
+
+.photoCredit {
+    position: absolute;
+    bottom: $spacing-xs;
+    left: $spacing-xs;
+    font-family: $font-family-sans;
+    font-size: $font-size-small;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.infoPanel {
+    flex: 1;
+    background: #E0D4BE;
+    padding: $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: $spacing-md;
 
     h1 {
         font-family: $font-family-serif;
         font-size: $font-size-title;
-        margin-bottom: $spacing-lg;
-        text-align: center;
+        font-weight: 400;
+        color: $color-text-primary;
+        margin: 0;
+        line-height: $line-height-tight;
 
         @include respond-to(desktop) {
             font-size: $font-size-display;
         }
     }
 
+    .divider {
+        height: 1px;
+        background: $color-border;
+    }
+
     p {
         font-family: $font-family-sans;
         font-size: $font-size-base;
-        line-height: $line-height-base; // Makes multi-line text readable
-        white-space: pre-wrap; // Preserves line breaks from database
+        line-height: $line-height-base;
+        color: $color-text-primary;
+        margin: 0;
+        white-space: pre-wrap;
 
         @include respond-to(desktop) {
             font-size: $font-size-large;
-            line-height: 1.8; // Even more spacious on desktop
+            line-height: 1.8;
         }
     }
 }
@@ -39,7 +107,7 @@
     font-family: $font-family-serif;
     font-size: $font-size-large;
     color: $color-text-secondary;
-    background-color: $color-background;
+    background: $color-background;
 }
 
 .errorContainer {
@@ -49,7 +117,7 @@
     align-items: center;
     justify-content: center;
     padding: $spacing-lg;
-    background-color: $color-background;
+    background: $color-background;
 }
 
 .error {
