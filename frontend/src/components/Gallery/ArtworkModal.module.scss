@@ -12,8 +12,6 @@
   justify-content: center;
   padding: $spacing-md;
   overflow-y: auto;
-
-  // Fade-in animation
   animation: fadeIn 0.2s ease-out;
 
   @include respond-to(desktop) {
@@ -22,16 +20,23 @@
 }
 
 @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
   from {
     opacity: 0;
+    transform: translateY(20px);
   }
 
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// Shared button styling for all modal buttons - glassmorphism style
+// Shared button styling - glassmorphism style
 %modalButton {
   position: fixed;
   bottom: $spacing-md;
@@ -60,7 +65,6 @@
   }
 }
 
-// Return button (shared between both layers)
 .returnButton {
   @extend %modalButton;
   left: $spacing-md;
@@ -74,8 +78,8 @@
   font-size: 1.2em;
 }
 
-// Back to Art View button (info overlay only)
-.backToArtButton {
+// Right-side action button (toggles between "View Interpretation" / "Back to Art View")
+.actionButton {
   @extend %modalButton;
   right: $spacing-md;
 
@@ -84,107 +88,47 @@
   }
 }
 
-// Layer 1: Artwork View (clean, full-screen image)
-.artworkView {
+// Card container - sized by the image, same dimensions for both "sides"
+.card {
   position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex;
+  border: 8px solid white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none; // Allow clicks to pass through to buttons
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+// In artwork mode, clicks pass through to backdrop (dismisses modal)
+.cardPassthrough {
+  pointer-events: none;
 }
 
 .artworkImage {
-  max-width: 95vw;
-  max-height: 90vh;
+  display: block;
+  max-width: calc(95vw - 16px);
+  max-height: calc(90vh - 16px);
   object-fit: contain;
-  border: 8px solid white;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 
   @include respond-to(tablet) {
-    max-width: 93vw;
-    max-height: 88vh;
+    max-width: calc(93vw - 16px);
+    max-height: calc(88vh - 16px);
   }
 
   @include respond-to(desktop) {
-    max-width: 90vw;
-    max-height: 85vh;
+    max-width: calc(90vw - 16px);
+    max-height: calc(85vh - 16px);
   }
 }
 
-// View Interpretation button (artwork view only)
-.viewInterpretationButton {
-  @extend %modalButton;
-  right: $spacing-md;
-
-  @include respond-to(tablet) {
-    right: $spacing-lg;
-  }
-}
-
-// Layer 2: Info Overlay (artwork details + AI interpretation)
+// Info overlay - fills the card, sits on top of the image
 .infoOverlay {
-  position: relative;
-  width: 100%;
-  max-width: 1200px;
-  max-height: 90vh;
+  position: absolute;
+  inset: 0;
   background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border-radius: 8px;
   overflow-y: auto;
-  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-
-  @include respond-to(tablet) {
-    max-height: 85vh;
-  }
 }
 
 .infoContent {
   padding: $spacing-xl;
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-lg;
-
-  @include respond-to(tablet) {
-    padding: $spacing-xl;
-  }
-
-  @include respond-to(desktop) {
-    flex-direction: row;
-    gap: $spacing-xl;
-  }
-}
-
-.infoImage {
-  width: 100%;
-  max-height: 50vh;
-  object-fit: contain;
-  border: 5px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  @include respond-to(desktop) {
-    width: 50%;
-    max-height: 70vh;
-  }
-}
-
-.infoText {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;

@@ -47,10 +47,6 @@ export const Artwork = memo(function Artwork({
         ? styles.offsetRight
         : styles.offsetCenter;
 
-  const titleClass = isFocused
-    ? `${styles.title} ${styles.titleVisible}`
-    : styles.title;
-
   const handleClick = () => {
     if (isFocused && onArtworkClick) {
       onArtworkClick(id);
@@ -74,7 +70,6 @@ export const Artwork = memo(function Artwork({
           loading={loadingStrategy === 'eager' ? 'eager' : 'lazy'}
           fetchPriority={loadingStrategy === 'preload' ? 'high' : 'auto'}
         />
-        {title && <h3 className={titleClass}>{title}</h3>}
       </div>
     </article>
   );

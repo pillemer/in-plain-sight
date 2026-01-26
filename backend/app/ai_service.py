@@ -149,6 +149,7 @@ Focus on what you observe in the image:
 Constraints:
 - Write in third person
 - Always refer to the creator as "the artist" (never by name)
+- Do not mention the title of the artwork.
 - 1-2 paragraphs maximum
 - Base your interpretation only on what you can see in the image
 - Do not invent facts (dates, materials, provenance, artist intent)

@@ -72,7 +72,7 @@ I started studying with Tzahi Gil who taught me the basics. Eli Shamir gave me s
         db.flush()
 
         # Create artworks from Cloudinary images
-        for image in images:
+        for index, image in enumerate(images, start=1):
             public_id = image["public_id"]
             # Construct optimized URL with Cloudinary transformations
             # f_auto: Auto-deliver WebP/AVIF/JPEG XL based on browser
@@ -83,7 +83,7 @@ I started studying with Tzahi Gil who taught me the basics. Eli Shamir gave me s
             image_url = f"{CLOUDINARY_BASE_URL}/{transformations}/{public_id}"
 
             artwork = Artwork(
-                title="",  # No metadata yet
+                title=f"Artwork {index}",
                 image_url=image_url,
                 artist_id=artist.id,
                 collection_id=collection.id,
